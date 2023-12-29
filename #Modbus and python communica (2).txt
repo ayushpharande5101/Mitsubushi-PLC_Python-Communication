@@ -1,0 +1,40 @@
+
+
+import write as write
+from pyModbusTCP.client import ModbusClient
+
+# Modbus TCP server details
+SERVER_HOST = '192.168.1.27'
+SERVER_PORT = 502
+
+# Create a Modbus TCP client
+client = ModbusClient()
+
+# Specify the modbus TCP server details
+client.host = SERVER_HOST
+client.port = SERVER_PORT
+
+# Open the connection to the Modbus TCP server
+if not client.is_open:
+    if not client.open():
+        print("Unable to connect to Modbus TCp server")
+        exit(1)
+start=1
+lis=[45,67,23]
+# Write registers
+client.write_single_register(0,12)
+client.write_multiple_registers(start,lis,)
+
+# Read holding registers
+start_register = 0
+quantity = 5
+regs = client.read_holding_registers(start_register, quantity)
+print(regs)
+# chech if read was successful
+if regs:
+    print(f"Read successful! Holding registers:{regs}")
+else:
+    print("Failed to read the holding registers")
+
+# close the modbus TCP connection
+client.close()
